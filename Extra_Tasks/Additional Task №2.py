@@ -1,12 +1,15 @@
 def standartize_name(name: str) -> str:
     '''
     Стандартизирует имя контакта
-
-    name - Имя контакта
+    name - имя контакта
     '''
     return name.title()
 
-def standartize_phone(phone):
+def standartize_phone(phone: str) -> str:
+    '''
+    Стандатизирует номер телефона
+    phone - номер телефона
+    '''
     phone_digits = ''.join(char for char in phone if char.isdigit())
     if len(phone_digits) == 10:
         return '+7' + phone_digits
@@ -15,7 +18,11 @@ def standartize_phone(phone):
     else:
         return phone_digits
     
-def add_contact(phone_book):
+def add_contact(phone_book:dict) -> dict:
+    '''
+    Добавляет контакт в телефонную книгу
+    phone_book - телефонная книга
+    '''
     name = input("Введите имя контакта: ")
     phone = input("Введите номер телефона: ")
 
@@ -23,49 +30,68 @@ def add_contact(phone_book):
     standartized_phone = standartize_phone(phone)
 
     new_phone_book = phone_book.copy()
-    new_phone_book[standartize_name] = standartize_phone
-    print("Контакт успешнр добавлен!")
+    new_phone_book[standartized_name] = standartized_phone
+    print("Контакт успешно добавлен!")
     return new_phone_book
 
-def delete_contact(phone_book):
+def delete_contact(phone_book:dict) -> dict:
+    '''
+    Удаляет контакт из телефонной книги
+    phone_book - телефонная книга
+    '''
     name = input("Введите имя контакта: ")
-    standartize_name = standartize_name(name)
+    standartized_name = standartize_name(name)
 
-    if standartize_name in phone_book:
+    if standartized_name in phone_book:
         new_phone_book = phone_book.copy()
-        del new_phone_book[standartize_name]
+        del new_phone_book[standartized_name]
         print("Контакт успешно удалён!")
         return new_phone_book
     else:
         print("Контакт не найден!")
         return phone_book
     
-def view_contact(phone_book):
+def view_contact(phone_book:dict) -> dict:
+    '''
+    Просматривание телефонной книги
+    phone book - телефонная книга
+    '''
     if not phone_book:
         print("Телефоная книга пуста")
     else:
         for name, phone in phone_book.items():
             print(f"{name}: {phone}")
 
-def edit_contact(phone_book):
-    name = input("Введите имя")
-    standartize_name = standartize_name(name)
+def edit_contact(phone_book:dict) -> dict:
+    '''
+    Изменение контаков в телефонной книге
+    phone_book - телефонная книга
+    '''
+    name = input("Введите имя: ")
+    standartized_name = standartize_name(name)
 
-    if standartize_name in phone_book:
+    if standartized_name in phone_book:
         new_phone = input("Введите новый номер телефона: ")
-        standartize_phone = standartize_phone(new_phone)
+        standartized_phone = standartize_phone(new_phone)
         new_phone_book = phone_book.copy()
-        new_phone_book[standartize_name] = standartize_phone
+        new_phone_book[standartized_name] = standartized_phone
+        return new_phone_book
         print("Номер телефона успешно изменён")
+    else:
+        print("Ошибка")
+        return phone_book
 
 def menu():
+    '''
+    Меню выбора 
+    '''
     phone_book = {}
     while True:
         print("\n Выберите функцию:")
         print("1. Добавить контакт")
         print("2. Удалить контакт")
         print("3. Показать список контактов")
-        print("4. Изменить нмер")
+        print("4. Изменить номер")
         print("5. Выход")
  
         choice = input("Введите номер функции: ")
