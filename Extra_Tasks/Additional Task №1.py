@@ -1,86 +1,25 @@
-def standartize_name(name: str) -> str:
-    '''
-    Стандартизирует имя контакта
+import random
 
-    name - Имя контакта
-    '''
-    return name.title()
+print("Отгадай число!")
 
-def standartize_phone(phone):
-    phone_digits = ''.join(char for char in phone if char.isdigit())
-    if len(phone_digits) == 10:
-        return '+7' + phone_digits
-    elif len(phone_digits) == 11:
-        return '+7' + phone_digits[1:]
-    else:
-        return phone_digits
+hidden_number = random.randint(0, 100)
+print("Компьютер загадал число: ", hidden_number)
+
+count = 0
+
+while True:
+    user_input = input("Ввод пользователя: ")
+
+    if user_input == "Выход":
+        print("Вы забуксовали")
+        break
     
-def add_contact(phone_book):
-    name = input("Введите имя контакта: ")
-    phone = input("Введите номер телефона: ")
+    count += 1
 
-    standartized_name = standartize_name(name)
-    standartized_phone = standartize_phone(phone)
-
-    new_phone_book = phone_book.copy()
-    new_phone_book[standartize_name] = standartize_phone
-    print("Контакт успешнр добавлен!")
-    return new_phone_book
-
-def delete_contact(phone_book):
-    name = input("Введите имя контакта: ")
-    standartize_name = standartize_name(name)
-
-    if standartize_name in phone_book:
-        new_phone_book = phone_book.copy()
-        del new_phone_book[standartize_name]
-        print("Контакт успешно удалён!")
-        return new_phone_book
+    if int(user_input) < hidden_number:
+        print("Ваше число меньше!")
+    elif  int(user_input) > hidden_number:
+        print("Ваше число больше!")
     else:
-        print("Контакт не найден!")
-        return phone_book
-    
-def view_contact(phone_book):
-    if not phone_book:
-        print("Телефоная книга пуста")
-    else:
-        for name, phone in phone_book.items():
-            print(f"{name}: {phone}")
-
-def edit_contact(phone_book):
-    name = input("Введите имя")
-    standartize_name = standartize_name(name)
-
-    if standartize_name in phone_book:
-        new_phone = input("Введите новый номер телефона: ")
-        standartize_phone = standartize_phone(new_phone)
-        new_phone_book = phone_book.copy()
-        new_phone_book[standartize_name] = standartize_phone
-        print("Номер телефона успешно изменён")
-
-def menu():
-    phone_book = {}
-    while True:
-        print("\n Выберите функцию:")
-        print("1. Добавить контакт")
-        print("2. Удалить контакт")
-        print("3. Показать список контактов")
-        print("4. Изменить нмер")
-        print("5. Выход")
-
-        choice = input("Введите номер функции: ")
-
-        if choice == '1':
-            phone_book = add_contact(phone_book)
-        elif choice == "2":
-            phone_book = delete_contact(phone_book)
-        elif choice == "3":
-            view_contact(phone_book)
-        elif choice == "4":
-            phone_book = edit_contact(phone_book)
-        elif choice == "5":
-            print("Выход из программы")
-            break
-        else:
-            print("Неверный выбор, выберите другой номер!")    
-menu()
+        print("Поздравляем! Вы мэрлин, ведь вы угадали число за " + str(count) + " попытки!")
+        break
