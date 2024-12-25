@@ -27,7 +27,7 @@ class PoleChudes:
         self.word_list.remove(self.current_word)
         self.hidden_word = "■" * len(self.current_word)
         self.guessed_letters.clear()
-        self.lives = self.initial_lives  # Восстановление жизней для нового слова
+        self.lives = self.initial_lives
         return True
 
     def display_word(self):
@@ -54,15 +54,6 @@ class PoleChudes:
             else:
                 print("Неверное слово. Игра завершена.")
                 self.lives = 0
-        # elif len(guess) == len(self.current_word):
-        #     if guess == self.current_word:
-        #         print("Вы угадали слово целиком!")
-        #         self.hidden_word = self.current_word
-        #     else:
-        #         print("Неверное слово. Игра завершена.")
-        #         self.lives = 0
-        # else:
-        #     print("Некорректный ввод. Попробуйте ещё раз.")
 
     def check_win(self):
         if self.hidden_word == self.current_word or set(self.current_word) <= self.guessed_letters:
