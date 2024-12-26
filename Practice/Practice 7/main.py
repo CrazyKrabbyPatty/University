@@ -51,6 +51,20 @@ class OfficeTweaksGUI:
         except Exception as e:
             sg.popup_error(f"Ошибка при удалении файла: {str(e)}")
 
+    def delete_files_by_criteria(self, criteria, value):
+        deleted_files = []
+        try:
+            for file in self.list_files():
+                if ((criteria == "start" and file.startswith(value)) or
+                        (criteria == "end" and file.endswith(value)) or
+                        (criteria == "extension" and file.endswith(value)) or
+                        (criteria == "substring" and value in file)):
+                    os.remove(os.path.join(self.path, file))
+                    deleted_files.append(file)
+            sg.popup(f"Удалены файлы: {', '.join(deleted_files)}" if deleted_files else "Нет файлов для удаления.")
+        except Exception as e:
+            sg.popup_error(f"Ошибка при удалении файлов: {str(e)}")
+
     def change_dir(self, new_path):
         if os.path.exists(new_path):
             self.path = new_path
@@ -110,12 +124,34 @@ class OfficeTweaksGUI:
                         self.compress_image(selected_files[0], int(quality))
 
             elif event == "Удалить файл":
-                selected_files = values['-FILE LIST-']
-                if selected_files:
-                    confirm = sg.popup_yes_no(f"Вы уверены, что хотите удалить {selected_files[0]}?")
-                    if confirm == 'Yes':
-                        self.delete_file(selected_files[0])
-                        window['-FILE LIST-'].update(self.list_files())
+                submenu_layout = [
+                    [sg.Button("Удалить по начальной подстроке", size=(30, 1))],
+                    [sg.Button("Удалить по конечной подстроке", size=(30, 1))],
+                    [sg.Button("Удалить по расширению", size=(30, 1))],
+                    [sg.Button("Удалить по подстроке", size=(30, 1))],
+                ]
+                submenu_window = sg.Window("Удалить файлы", submenu_layout)
+                while True:
+                    sub_event, sub_values = submenu_window.read()
+                    if sub_event in (sg.WINDOW_CLOSED, None):
+                        break
+                    elif sub_event == "Удалить по начальной подстроке":
+                        substring = sg.popup_get_text("Введите начальную подстроку:")
+                        if substring:
+                            self.delete_files_by_criteria("start", substring)
+                    elif sub_event == "Удалить по конечной подстроке":
+                        substring = sg.popup_get_text("Введите конечную подстроку:")
+                        if substring:
+                            self.delete_files_by_criteria("end", substring)
+                    elif sub_event == "Удалить по расширению":
+                        extension = sg.popup_get_text("Введите расширение (например, .txt):")
+                        if extension:
+                            self.delete_files_by_criteria("extension", extension)
+                    elif sub_event == "Удалить по подстроке":
+                        substring = sg.popup_get_text("Введите подстроку:")
+                        if substring:
+                            self.delete_files_by_criteria("substring", substring)
+                submenu_window.close()
 
         window.close()
         exit(0)
